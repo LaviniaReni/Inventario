@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="InventoryItem" load_steps=3 format=3 uid="uid://bl5bswo43byfp"]
+
+[ext_resource type="Script" uid="uid://cb7ojjgg4mdf4" path="res://addons/inventory_system/scripts/item.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://bv4ligqatytoy" path="res://addons/inventory_system/demo/demo_items/icon_items_demo/Icon1.png" id="1_8nmy4"]
+
+[resource]
+script = ExtResource("1")
+id = "potion_health"
+name = "Poción de Vida"
+description = "Restaura 50 HP"
+icon = ExtResource("1_8nmy4")
+item_type = 0
+is_usable = true
+is_consumable = true
+custom_data = {
+"heal_amount": 50
+}

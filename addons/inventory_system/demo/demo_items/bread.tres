@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="InventoryItem" load_steps=4 format=3 uid="uid://drppy80noq4t6"]
+
+[ext_resource type="Script" uid="uid://cb7ojjgg4mdf4" path="res://addons/inventory_system/scripts/item.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://d2ata8gueduki" path="res://addons/inventory_system/demo/demo_items/icon_items_demo/Food.png" id="1_frb8n"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m75hu"]
+atlas = ExtResource("1_frb8n")
+region = Rect2(32, 48, 16, 16)
+
+[resource]
+script = ExtResource("1")
+id = "bread"
+name = "Pan"
+description = "Pan fresco"
+icon = SubResource("AtlasTexture_m75hu")
+item_type = 0
+max_stack = 50
+is_usable = true
+is_consumable = true

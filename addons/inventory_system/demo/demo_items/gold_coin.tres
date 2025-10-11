@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="InventoryItem" load_steps=3 format=3 uid="uid://cgx1t2np3rk6y"]
+
+[ext_resource type="Script" uid="uid://cb7ojjgg4mdf4" path="res://addons/inventory_system/scripts/item.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://geuqvos241tm" path="res://addons/inventory_system/demo/demo_items/icon_items_demo/Icon31.png" id="1_3qixc"]
+
+[resource]
+script = ExtResource("1")
+id = "gold_coin"
+name = "Moneda de Oro"
+description = "Una moneda brillante"
+icon = ExtResource("1_3qixc")
+max_stack = 999
+custom_data = {
+"value": 1
+}

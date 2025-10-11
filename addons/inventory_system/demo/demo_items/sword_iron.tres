@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="InventoryItem" load_steps=3 format=3 uid="uid://bwcgx2bo2uy16"]
+
+[ext_resource type="Script" uid="uid://cb7ojjgg4mdf4" path="res://addons/inventory_system/scripts/item.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://gefx8at60fev" path="res://addons/inventory_system/demo/demo_items/icon_items_demo/Icon5.png" id="1_bwu2b"]
+
+[resource]
+script = ExtResource("1")
+id = "sword_iron"
+name = "Espada de Hierro"
+description = "Una espada común"
+icon = ExtResource("1_bwu2b")
+item_type = 1
+is_stackable = false
+max_stack = 1
+is_usable = true
+custom_data = {
+"damage": 15
+}
