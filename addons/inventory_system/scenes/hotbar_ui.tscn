@@ -1,7 +1,14 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://addons/inventory_system/scripts/hotbar_ui.gd" id="1"]
 [ext_resource type="PackedScene" path="res://addons/inventory_system/scenes/hotbar_slot_ui.tscn" id="2"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bg"]
+bg_color = Color(0.1, 0.1, 0.1, 0.8)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
 
 [node name="HotbarUI" type="Control"]
 layout_mode = 3
@@ -27,13 +34,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_bg")
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bg"]
-bg_color = Color(0.1, 0.1, 0.1, 0.8)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
 
 [node name="Container" type="HBoxContainer" parent="."]
 layout_mode = 1

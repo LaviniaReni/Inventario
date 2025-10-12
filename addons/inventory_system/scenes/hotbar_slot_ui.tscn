@@ -1,6 +1,14 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://addons/inventory_system/scripts/hotbar_slot_ui.gd" id="1"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_selected"]
+bg_color = Color(1, 1, 0, 0)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(1, 0.8, 0, 1)
 
 [node name="HotbarSlotUI" type="Panel"]
 custom_minimum_size = Vector2(64, 64)
@@ -64,11 +72,3 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_selected")
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_selected"]
-bg_color = Color(1, 1, 0, 0)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(1, 0.8, 0, 1)

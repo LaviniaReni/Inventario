@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=4 format=3 uid="uid://dc1v24xkjjbex"]
 
 [ext_resource type="Script" uid="uid://bflmfgmeulp2e" path="res://addons/inventory_system/demo/demo_with_hotbar.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://dylkpea7x0fj6" path="res://addons/inventory_system/scenes/inventory_ui.tscn" id="2"]
@@ -20,10 +20,10 @@ anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-offset_left = 384.0
-offset_top = 568.0
-offset_right = 768.0
-offset_bottom = 648.0
+offset_left = 234.0
+offset_top = 505.0
+offset_right = 618.0
+offset_bottom = 585.0
 grow_horizontal = 1
 grow_vertical = 1
 
