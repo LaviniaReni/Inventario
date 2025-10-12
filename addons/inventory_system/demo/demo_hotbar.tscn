@@ -2,13 +2,12 @@
 
 [ext_resource type="Script" uid="uid://bflmfgmeulp2e" path="res://addons/inventory_system/demo/demo_with_hotbar.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://dylkpea7x0fj6" path="res://addons/inventory_system/scenes/inventory_ui.tscn" id="2"]
-[ext_resource type="PackedScene" path="res://addons/inventory_system/scenes/hotbar_ui.tscn" id="3"]
+[ext_resource type="PackedScene" uid="uid://dxeyi01lth3tr" path="res://addons/inventory_system/scenes/hotbar_ui.tscn" id="3"]
 
 [node name="DemoHotbar" type="Node2D"]
 script = ExtResource("1")
 
 [node name="InventoryUI" parent="." instance=ExtResource("2")]
-visible = false
 offset_left = 579.0
 offset_top = 296.0
 offset_right = 579.0
