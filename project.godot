@@ -19,6 +19,12 @@ config/icon="res://icon.svg"
 
 ItemDatabase="*res://addons/inventory_system/scripts/item_database.gd"
 
+[display]
+
+window/size/viewport_width=800
+window/size/viewport_height=600
+window/stretch/mode="canvas_items"
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/inventory_system/plugin.cfg")
