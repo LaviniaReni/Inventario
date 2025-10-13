@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="InventoryItem" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://addons/inventory_system/scripts/item.gd" id="1"]
+[ext_resource type="Texture2D" path="res://icon.svg" id="2"]
+
+[resource]
+script = ExtResource("1")
+id = "wood"
+name = "Madera"
+description = "Madera procesada"
+icon = ExtResource("2")
+item_type = 3
+max_stack = 64
