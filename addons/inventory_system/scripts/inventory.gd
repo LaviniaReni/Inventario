@@ -28,24 +28,17 @@ func _exit_tree():
 	if auto_save:
 		save_inventory()
 
-# ============================================
-# SISTEMA BASE DE INVENTARIO
-# ============================================
-
 func initialize_slots() -> void:
-	"""Inicializa todos los slots del inventario"""
 	slots.clear()
 	for i in range(size):
 		slots.append(InventorySlot.new())
 
 func add_item(item: InventoryItem, amount: int = 1) -> bool:
-	"""Agrega un item al inventario. Retorna true si se agregó completamente"""
 	if item == null or amount <= 0:
 		return false
 	
 	var remaining = amount
 	
-	# Primero intentar stackear con items existentes
 	if item.is_stackable:
 		for slot in slots:
 			if not slot.is_empty() and slot.item.id == item.id:
@@ -57,7 +50,6 @@ func add_item(item: InventoryItem, amount: int = 1) -> bool:
 						save_inventory()
 					return true
 	
-	# Luego buscar slots vacíos
 	for slot in slots:
 		if slot.is_empty():
 			remaining = slot.add_item(item, remaining)
@@ -68,7 +60,6 @@ func add_item(item: InventoryItem, amount: int = 1) -> bool:
 					save_inventory()
 				return true
 	
-	# Si quedó algo sin agregar
 	if remaining < amount:
 		inventory_changed.emit()
 		item_added.emit(item, amount - remaining)
@@ -80,7 +71,6 @@ func add_item(item: InventoryItem, amount: int = 1) -> bool:
 	return remaining == 0
 
 func add_item_by_id(item_id: String, amount: int = 1) -> bool:
-	"""Agrega un item por su ID desde la base de datos"""
 	if not ItemDatabase or not ItemDatabase.has_item(item_id):
 		push_warning("Item no encontrado: %s" % item_id)
 		return false
@@ -88,7 +78,6 @@ func add_item_by_id(item_id: String, amount: int = 1) -> bool:
 	return add_item(item, amount)
 
 func remove_item(item: InventoryItem, amount: int = 1) -> bool:
-	"""Remueve un item del inventario. Retorna true si se removió completamente"""
 	if item == null or amount <= 0:
 		return false
 	
@@ -107,18 +96,15 @@ func remove_item(item: InventoryItem, amount: int = 1) -> bool:
 	return false
 
 func remove_item_by_id(item_id: String, amount: int = 1) -> bool:
-	"""Remueve un item por su ID"""
 	if not ItemDatabase or not ItemDatabase.has_item(item_id):
 		return false
 	var item = ItemDatabase.get_item(item_id)
 	return remove_item(item, amount)
 
 func has_item(item: InventoryItem, amount: int = 1) -> bool:
-	"""Verifica si el inventario tiene suficiente cantidad de un item"""
 	return get_item_count(item) >= amount
 
 func get_item_count(item: InventoryItem) -> int:
-	"""Retorna la cantidad total de un item en el inventario"""
 	if item == null:
 		return 0
 	var count = 0
@@ -128,7 +114,6 @@ func get_item_count(item: InventoryItem) -> int:
 	return count
 
 func use_item(item: InventoryItem) -> bool:
-	"""Usa un item. Si es consumible, lo consume"""
 	if not has_item(item):
 		return false
 	item_used.emit(item)
@@ -137,18 +122,15 @@ func use_item(item: InventoryItem) -> bool:
 	return true
 
 func use_item_by_id(item_id: String) -> bool:
-	"""Usa un item por su ID"""
 	if not ItemDatabase or not ItemDatabase.has_item(item_id):
 		return false
 	var item = ItemDatabase.get_item(item_id)
 	return use_item(item)
 
 func swap_slots(index_a: int, index_b: int) -> void:
-	"""Intercambia el contenido de dos slots"""
 	if index_a < 0 or index_a >= slots.size() or index_b < 0 or index_b >= slots.size():
 		return
 	
-	# Si ambos tienen el mismo item stackeable, intentar combinar
 	if not slots[index_a].is_empty() and not slots[index_b].is_empty():
 		if slots[index_a].item.id == slots[index_b].item.id and slots[index_a].item.is_stackable:
 			var remaining = slots[index_b].add_item(slots[index_a].item, slots[index_a].quantity)
@@ -161,7 +143,6 @@ func swap_slots(index_a: int, index_b: int) -> void:
 				save_inventory()
 			return
 	
-	# Swap normal
 	var temp_item = slots[index_a].item
 	var temp_quantity = slots[index_a].quantity
 	slots[index_a].item = slots[index_b].item
@@ -173,19 +154,13 @@ func swap_slots(index_a: int, index_b: int) -> void:
 		save_inventory()
 
 func clear_inventory() -> void:
-	"""Limpia completamente el inventario"""
 	for slot in slots:
 		slot.clear()
 	inventory_changed.emit()
 	if auto_save:
 		save_inventory()
 
-# ============================================
-# SISTEMA DE GUARDADO
-# ============================================
-
 func save_inventory() -> void:
-	"""Guarda el inventario en disco"""
 	var save_data = []
 	for slot in slots:
 		save_data.append(slot.get_data() if not slot.is_empty() else {})
@@ -195,7 +170,6 @@ func save_inventory() -> void:
 		file.close()
 
 func load_inventory() -> void:
-	"""Carga el inventario desde disco"""
 	if not FileAccess.file_exists(save_path):
 		return
 	
@@ -217,19 +191,13 @@ func load_inventory() -> void:
 					slots[i].add_item(item, slot_data.get("quantity", 1))
 		inventory_changed.emit()
 
-# ============================================
-# SISTEMA DE ARMADURA
-# ============================================
-
 func initialize_armor_slots():
-	"""Inicializa los slots de armadura y offhand"""
 	armor_slots.clear()
 	for i in range(4):
 		armor_slots.append(InventorySlot.new())
 	offhand_slot = InventorySlot.new()
 
 func equip_armor(item: InventoryItem, slot_type: ArmorSlot) -> bool:
-	"""Equipa una pieza de armadura en el slot correspondiente"""
 	if item == null or item.item_type != InventoryItem.ItemType.EQUIPMENT:
 		return false
 	
@@ -239,20 +207,17 @@ func equip_armor(item: InventoryItem, slot_type: ArmorSlot) -> bool:
 	if armor_type != expected_type:
 		return false
 	
-	# Desequipar armadura actual si existe
 	if not armor_slots[slot_type].is_empty():
 		var old_armor = armor_slots[slot_type].item
 		armor_slots[slot_type].clear()
 		add_item(old_armor, 1)
 	
-	# Equipar nueva armadura
 	armor_slots[slot_type].add_item(item, 1)
 	remove_item(item, 1)
 	inventory_changed.emit()
 	return true
 
 func unequip_armor(slot_type: ArmorSlot) -> bool:
-	"""Desequipa una pieza de armadura"""
 	if armor_slots[slot_type].is_empty():
 		return false
 	
@@ -263,11 +228,9 @@ func unequip_armor(slot_type: ArmorSlot) -> bool:
 	return true
 
 func get_equipped_armor(slot_type: ArmorSlot) -> InventoryItem:
-	"""Retorna la armadura equipada en un slot específico"""
 	return armor_slots[slot_type].item if not armor_slots[slot_type].is_empty() else null
 
 func get_total_armor_value() -> int:
-	"""Calcula el valor total de armadura equipada"""
 	var total = 0
 	for armor_slot in armor_slots:
 		if not armor_slot.is_empty():
@@ -275,24 +238,20 @@ func get_total_armor_value() -> int:
 	return total
 
 func equip_offhand(item: InventoryItem) -> bool:
-	"""Equipa un item en la mano secundaria"""
 	if item == null:
 		return false
 	
-	# Desequipar item actual si existe
 	if not offhand_slot.is_empty():
 		var old_item = offhand_slot.item
 		offhand_slot.clear()
 		add_item(old_item, 1)
 	
-	# Equipar nuevo item
 	offhand_slot.add_item(item, 1)
 	remove_item(item, 1)
 	inventory_changed.emit()
 	return true
 
 func unequip_offhand() -> bool:
-	"""Desequipa el item de la mano secundaria"""
 	if offhand_slot.is_empty():
 		return false
 	
