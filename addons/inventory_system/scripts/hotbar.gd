@@ -20,13 +20,11 @@ func _ready():
 		validate_hotbar_size()
 
 func initialize_hotbar():
-	"""Inicializa los slots del hotbar"""
 	hotbar_slots.clear()
 	for i in range(hotbar_size):
 		hotbar_slots.append(i)
 
 func validate_hotbar_size():
-	"""Valida que el tamaño del hotbar no exceda el inventario"""
 	if not inventory:
 		return
 	if hotbar_size > inventory.size:
@@ -38,7 +36,6 @@ func _input(event):
 	if not inventory:
 		return
 	
-	# Manejar teclas numéricas (1-9)
 	if enable_number_keys:
 		for i in range(1, min(hotbar_size + 1, 10)):
 			var action_name = "hotbar_slot_%d" % i
@@ -48,7 +45,6 @@ func _input(event):
 					get_viewport().set_input_as_handled()
 				return
 	
-	# Manejar scroll del mouse
 	if enable_scroll and event is InputEventMouseButton:
 		if event.pressed:
 			if event.button_index == MOUSE_BUTTON_WHEEL_UP:
@@ -59,7 +55,6 @@ func _input(event):
 				get_viewport().set_input_as_handled()
 
 func select_slot(index: int):
-	"""Selecciona un slot específico del hotbar"""
 	if index < 0 or index >= hotbar_size:
 		return
 	
@@ -67,24 +62,19 @@ func select_slot(index: int):
 	var item = get_selected_item()
 	slot_selected.emit(selected_slot, item)
 	
-	# Auto-usar item si está habilitado
 	if auto_use_on_select and item and item.is_usable:
 		use_selected_item()
 
 func select_next_slot():
-	"""Selecciona el siguiente slot (con wrap-around)"""
 	select_slot((selected_slot + 1) % hotbar_size)
 
 func select_previous_slot():
-	"""Selecciona el slot anterior (con wrap-around)"""
 	select_slot((selected_slot - 1 + hotbar_size) % hotbar_size)
 
 func get_selected_item() -> InventoryItem:
-	"""Retorna el item del slot seleccionado"""
 	return get_item_at_slot(selected_slot)
 
 func get_item_at_slot(slot_index: int) -> InventoryItem:
-	"""Retorna el item en un slot específico"""
 	if not inventory:
 		return null
 	
@@ -96,7 +86,6 @@ func get_item_at_slot(slot_index: int) -> InventoryItem:
 	return slot.item if slot else null
 
 func get_quantity_at_slot(slot_index: int) -> int:
-	"""Retorna la cantidad de items en un slot específico"""
 	if not inventory:
 		return 0
 	
@@ -108,11 +97,9 @@ func get_quantity_at_slot(slot_index: int) -> int:
 	return slot.quantity if slot else 0
 
 func use_selected_item() -> bool:
-	"""Usa el item del slot seleccionado"""
 	return use_item_at_slot(selected_slot)
 
 func use_item_at_slot(slot_index: int) -> bool:
-	"""Usa el item de un slot específico"""
 	if slot_index < 0 or slot_index >= hotbar_size:
 		return false
 	
@@ -126,7 +113,6 @@ func use_item_at_slot(slot_index: int) -> bool:
 	return false
 
 func get_inventory_index(hotbar_index: int) -> int:
-	"""Convierte un índice del hotbar a índice del inventario"""
 	if hotbar_index < 0 or hotbar_index >= hotbar_slots.size():
 		return -1
 	
@@ -137,12 +123,10 @@ func get_inventory_index(hotbar_index: int) -> int:
 	return inv_idx
 
 func _on_inventory_changed():
-	"""Callback cuando el inventario cambia"""
 	if inventory and inventory.size < hotbar_size:
 		validate_hotbar_size()
 
 static func setup_input_actions():
-	"""Configura las acciones de input para el hotbar"""
 	for i in range(1, 10):
 		var action_name = "hotbar_slot_%d" % i
 		if not InputMap.has_action(action_name):
