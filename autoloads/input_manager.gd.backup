@@ -15,10 +15,19 @@ func setup_all_controls():
 	setup_minecraft_controls()
 	setup_crafting_controls()
 
+# ============================================
+# CONTROLES DE INVENTARIO
+# ============================================
+
 func setup_inventory_controls():
 	"""Configura controles básicos del inventario"""
+	# Abrir/Cerrar inventario (ya existe ui_cancel, pero agregamos alternativa)
 	add_key_action("open_inventory", KEY_E)
 	add_key_action("toggle_inventory", KEY_TAB)
+
+# ============================================
+# CONTROLES DEL HOTBAR
+# ============================================
 
 func setup_hotbar_controls():
 	"""Configura controles del hotbar (1-9)"""
@@ -28,27 +37,49 @@ func setup_hotbar_controls():
 	
 	print("  ✓ Hotbar: Slots 1-9 configurados")
 
+# ============================================
+# CONTROLES ESTILO MINECRAFT
+# ============================================
+
 func setup_minecraft_controls():
 	"""Configura controles adicionales estilo Minecraft"""
+	# Soltar items
 	add_key_action("drop_item", KEY_Q)
-	add_key_action("drop_stack", KEY_Q, true, true)
+	add_key_action("drop_stack", KEY_Q, true, true)  # Ctrl+Q
+	
+	# Intercambiar manos
 	add_key_action("swap_hands", KEY_F)
+	
+	# Pick block (modo creativo)
 	add_mouse_action("pick_block", MOUSE_BUTTON_MIDDLE)
-	add_key_action("quick_use", KEY_E, false, true)
+	
+	# Uso rápido
+	add_key_action("quick_use", KEY_E, false, true)  # Shift+E
+	
 	print("  ✓ Controles Minecraft configurados")
+
+# ============================================
+# CONTROLES DE CRAFTEO
+# ============================================
 
 func setup_crafting_controls():
 	"""Configura controles de crafteo"""
 	add_key_action("open_crafting", KEY_C)
-	add_key_action("craft_all", KEY_SHIFT)
+	add_key_action("craft_all", KEY_SHIFT)  # Mantener shift para craftear múltiples
+	
 	print("  ✓ Controles de crafteo configurados")
+
+# ============================================
+# FUNCIONES DE UTILIDAD
+# ============================================
 
 func add_key_action(action_name: String, keycode: int, ctrl: bool = false, shift: bool = false):
 	"""Agrega una acción de teclado al InputMap"""
 	if InputMap.has_action(action_name):
-		return
+		return  # Ya existe, no sobrescribir
 	
 	InputMap.add_action(action_name)
+	
 	var event = InputEventKey.new()
 	event.keycode = keycode
 	event.ctrl_pressed = ctrl
@@ -61,6 +92,7 @@ func add_mouse_action(action_name: String, button: int):
 		return
 	
 	InputMap.add_action(action_name)
+	
 	var event = InputEventMouseButton.new()
 	event.button_index = button
 	InputMap.action_add_event(action_name, event)
@@ -71,16 +103,40 @@ func add_gamepad_action(action_name: String, button: int):
 		return
 	
 	InputMap.add_action(action_name)
+	
 	var event = InputEventJoypadButton.new()
 	event.button_index = button
 	InputMap.action_add_event(action_name, event)
 
+# ============================================
+# SOPORTE PARA GAMEPAD (OPCIONAL)
+# ============================================
+
+func setup_gamepad_controls():
+	"""Configura controles de gamepad (Xbox/PlayStation)"""
+	# D-Pad para hotbar
+	add_gamepad_action("hotbar_next", JOY_BUTTON_DPAD_RIGHT)
+	add_gamepad_action("hotbar_prev", JOY_BUTTON_DPAD_LEFT)
+	
+	# Botones
+	add_gamepad_action("open_inventory", JOY_BUTTON_Y)  # Y/Triangle
+	add_gamepad_action("drop_item", JOY_BUTTON_B)       # B/Circle
+	add_gamepad_action("use_item", JOY_BUTTON_A)        # A/Cross
+	add_gamepad_action("open_crafting", JOY_BUTTON_X)   # X/Square
+	
+	# Bumpers para scroll de hotbar
+	add_gamepad_action("hotbar_scroll_up", JOY_BUTTON_LEFT_SHOULDER)
+	add_gamepad_action("hotbar_scroll_down", JOY_BUTTON_RIGHT_SHOULDER)
+	
+	print("  ✓ Controles de gamepad configurados")
+
+# ============================================
+# INFORMACIÓN Y DEBUG
+# ============================================
+
 func print_all_actions():
 	"""Imprime todas las acciones configuradas"""
-	var separator = ""
-	for i in range(60):
-		separator += "="
-	
+	var separator = "=" * 60
 	print("\n" + separator)
 	print("📋 ACCIONES DE INPUT CONFIGURADAS")
 	print(separator + "\n")
@@ -132,29 +188,43 @@ func event_to_string(event: InputEvent) -> String:
 	
 	return str(event)
 
+# ============================================
+# CAMBIO DE CONTROLES EN RUNTIME
+# ============================================
+
 func change_key_binding(action_name: String, new_keycode: int):
 	"""Cambia el binding de una acción existente"""
 	if not InputMap.has_action(action_name):
 		push_warning("Acción '%s' no existe" % action_name)
 		return false
 	
+	# Eliminar eventos existentes
 	InputMap.action_erase_events(action_name)
+	
+	# Agregar nuevo evento
 	var event = InputEventKey.new()
 	event.keycode = new_keycode
 	InputMap.action_add_event(action_name, event)
+	
 	print("✓ Binding cambiado: %s → %s" % [action_name, OS.get_keycode_string(new_keycode)])
 	return true
 
 func reset_to_defaults():
 	"""Resetea todos los controles a valores por defecto"""
+	# Limpiar acciones existentes
 	for action in InputMap.get_actions():
 		if action.begins_with("hotbar_") or action.begins_with("open_") or \
 		   action.begins_with("drop_") or action.begins_with("swap_") or \
 		   action.begins_with("pick_") or action.begins_with("craft_"):
 			InputMap.action_erase_events(action)
 	
+	# Reconfigurar
 	setup_all_controls()
 	print("✓ Controles reseteados a valores por defecto")
+
+# ============================================
+# GUARDADO/CARGA DE CONFIGURACIÓN
+# ============================================
 
 func save_input_config(path: String = "user://input_config.cfg"):
 	"""Guarda la configuración de inputs"""
