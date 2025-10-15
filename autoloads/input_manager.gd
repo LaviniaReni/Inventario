@@ -136,9 +136,10 @@ func setup_gamepad_controls():
 
 func print_all_actions():
 	"""Imprime todas las acciones configuradas"""
-	print("\n" + "="*60)
+	var separator = "=" * 60
+	print("\n" + separator)
 	print("📋 ACCIONES DE INPUT CONFIGURADAS")
-	print("="*60 + "\n")
+	print(separator + "\n")
 	
 	var actions = InputMap.get_actions()
 	actions.sort()
@@ -152,7 +153,7 @@ func print_all_actions():
 			for event in events:
 				print("  - %s" % event_to_string(event))
 	
-	print("\n" + "="*60 + "\n")
+	print("\n" + separator + "\n")
 
 func event_to_string(event: InputEvent) -> String:
 	"""Convierte un InputEvent a string legible"""

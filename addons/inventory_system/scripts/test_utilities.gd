@@ -5,9 +5,9 @@ extends EditorScript
 ## Uso: Script > Ejecutar > test_utilities.gd
 
 func _run():
-	print("\n" + "="*60)
+	print("\n" + "=" * 60)
 	print("🧪 UTILIDADES DE TESTING - INVENTORY SYSTEM")
-	print("="*60 + "\n")
+	print("=" * 60 + "\n")
 	
 	var option = show_menu()
 	
@@ -81,9 +81,9 @@ func validate_items():
 	
 	dir.list_dir_end()
 	
-	print("\n" + "="*60)
+	print("\n" + "=" * 60)
 	print("📊 RESUMEN DE VALIDACIÓN")
-	print("="*60)
+	print("=" * 60)
 	print("✓ Items válidos: %d" % valid_count)
 	print("❌ Items con errores: %d" % error_count)
 	
@@ -302,7 +302,7 @@ func clean_project():
 func show_statistics():
 	"""Muestra estadísticas del proyecto"""
 	print("📊 ESTADÍSTICAS DEL PROYECTO\n")
-	print("="*60)
+	print("=" * 60)
 	
 	# Contar items
 	var items_count = count_files("res://addons/inventory_system/demo/demo_items/", ".tres")
@@ -320,7 +320,7 @@ func show_statistics():
 	var total_size = calculate_addon_size()
 	print("💾 Tamaño del addon: %.2f MB" % (total_size / 1024.0 / 1024.0))
 	
-	print("="*60 + "\n")
+	print("=" * 60 + "\n")
 	
 	# Listar demos
 	print("🎮 DEMOS DISPONIBLES:")

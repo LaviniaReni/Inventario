@@ -2,9 +2,9 @@
 extends EditorScript
 
 func _run():
-	print("\n" + "="*50)
+	print("\n" + "=" * 50)
 	print("Creando recetas...")
-	print("="*50 + "\n")
+	print("=" * 50 + "\n")
 	
 	create_recipes_folder()
 	create_example_recipes()

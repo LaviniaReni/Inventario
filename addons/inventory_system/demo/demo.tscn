@@ -13,6 +13,7 @@ offset_right = 579.0
 offset_bottom = 296.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
+script = null
 
 [node name="InfoLabel" type="Label" parent="."]
 offset_left = 20.0

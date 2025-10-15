@@ -1,3 +1,7 @@
+@tool
+class_name InventoryUI
+extends Control
+
 ## Clase interna: InventorySlotUI
 class InventorySlotUI extends Panel:
 	signal slot_clicked(slot_index: int, item: InventoryItem)
@@ -137,10 +141,6 @@ class InventorySlotUI extends Panel:
 			inventory.swap_slots(data.index, index)
 
 ## Clase principal: InventoryUI
-@tool
-class_name InventoryUI
-extends Control
-
 signal item_clicked(item: InventoryItem, slot_index: int)
 signal item_right_clicked(item: InventoryItem, slot_index: int)
 

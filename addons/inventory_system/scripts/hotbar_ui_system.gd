@@ -1,3 +1,7 @@
+@tool
+class_name HotbarUI
+extends Control
+
 ## Clase interna: HotbarSlotUI
 class HotbarSlotUI extends Panel:
 	var slot_index: int = -1
@@ -101,10 +105,6 @@ class HotbarSlotUI extends Panel:
 					hotbar.use_item_at_slot(slot_index)
 
 ## Clase principal: HotbarUI
-@tool
-class_name HotbarUI
-extends Control
-
 @export var hotbar: Hotbar
 @export var inventory: InventoryManager
 @export var slot_size: Vector2 = Vector2(64, 64)
@@ -149,4 +149,45 @@ func _create_structure():
 	var hbox = HBoxContainer.new()
 	hbox.name = "Container"
 	add_child(hbox)
-	hbox.set_anchors_preset(Control.
+	hbox.set_anchors_preset(Control.PRESET_CENTER)
+
+func setup_hotbar():
+	if not container:
+		return
+	
+	for child in container.get_children():
+		child.queue_free()
+	slot_uis.clear()
+	
+	for i in range(hotbar.hotbar_size):
+		var slot_ui = HotbarSlotUI.new()
+		container.add_child(slot_ui)
+		slot_ui.setup(i, hotbar)
+		slot_ui.custom_minimum_size = slot_size
+		slot_uis.append(slot_ui)
+	
+	if container:
+		container.add_theme_constant_override("separation", spacing)
+
+func _on_inventory_changed():
+	update_ui()
+
+func _on_slot_selected(index: int, item: InventoryItem):
+	update_selection(index)
+
+func _on_item_used(item: InventoryItem):
+	pass
+
+func update_ui():
+	for i in range(slot_uis.size()):
+		slot_uis[i].update_slot()
+
+func update_selection(selected_index: int):
+	for i in range(slot_uis.size()):
+		slot_uis[i].set_selected(i == selected_index)
+
+func get_selected_slot_index() -> int:
+	return hotbar.selected_slot if hotbar else 0
+
+func get_selected_item() -> InventoryItem:
+	return hotbar.get_selected_item() if hotbar else null
