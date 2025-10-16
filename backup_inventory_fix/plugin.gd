@@ -6,12 +6,10 @@ func _enter_tree():
 	add_custom_type("InventoryUI", "Control", preload("res://addons/inventory_system/scripts/inventory_ui_system.gd"), preload("res://icon.svg"))
 	add_custom_type("Hotbar", "Node", preload("res://addons/inventory_system/scripts/hotbar.gd"), preload("res://icon.svg"))
 	add_custom_type("HotbarUI", "Control", preload("res://addons/inventory_system/scripts/hotbar_ui_system.gd"), preload("res://icon.svg"))
-	add_custom_type("CraftingManager", "Node", preload("res://addons/inventory_system/scripts/crafting_manager.gd"), preload("res://icon.svg"))
-	print("✓ Inventory System activado (v2.0 completo)")
+	print("✓ Inventory System activado (versión consolidada)")
 
 func _exit_tree():
 	remove_custom_type("InventoryManager")
 	remove_custom_type("InventoryUI")
 	remove_custom_type("Hotbar")
 	remove_custom_type("HotbarUI")
-	remove_custom_type("CraftingManager")
