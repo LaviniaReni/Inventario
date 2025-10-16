@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="CraftingRecipe" load_steps=2 format=3 uid="uid://cdkt0xwkxbnpr"]
+
+[ext_resource type="Script" uid="uid://dsnccqafmtcxe" path="res://addons/inventory_system/scripts/crafting_recipe.gd" id="1_r0p87"]
+
+[resource]
+script = ExtResource("1_r0p87")
+id = "wooden_sword"
+result_item_id = "sword_iron"
+pattern = Array[String](["wood", "", "", "wood", "", "", "stick", "", ""])

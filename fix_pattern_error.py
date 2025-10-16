@@ -1,138 +1,233 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Corrección final: pattern en CraftingRecipe
+Corrección de tipos de clase en scripts de UI
 """
 
 from pathlib import Path
+import re
 
-def fix_create_recipes():
-    """Reescribe create_recipes.gd con el tipo correcto"""
+def fix_inventory_ui_system():
+    """Corrige inventory_ui_system.gd para que la clase se reconozca correctamente"""
     
     root = Path.cwd()
-    file_path = root / "create_recipes.gd"
+    file_path = root / "addons" / "inventory_system" / "scripts" / "inventory_ui_system.gd"
     
-    content = '''@tool
-extends EditorScript
-
-func _run():
-\tvar separator = ""
-\tfor i in range(50):
-\t\tseparator += "="
-\t
-\tprint("\\n" + separator)
-\tprint("Creando recetas...")
-\tprint(separator + "\\n")
-\t
-\tcreate_recipes_folder()
-\tcreate_example_recipes()
-\t
-\tprint("\\n✓ Recetas creadas exitosamente!")
-\tprint("Ubicación: res://recipes/\\n")
-
-func create_recipes_folder():
-\tvar dir = DirAccess.open("res://")
-\tif not dir.dir_exists("recipes"):
-\t\tdir.make_dir("recipes")
-\t\tprint("✓ Carpeta recipes/ creada")
-
-func create_example_recipes():
-\tvar recipes = [
-\t\t{
-\t\t\t"id": "sticks",
-\t\t\t"result": "stick",
-\t\t\t"quantity": 4,
-\t\t\t"pattern": ["wood", "", "", "wood", "", "", "", "", ""]
-\t\t},
-\t\t{
-\t\t\t"id": "wooden_sword",
-\t\t\t"result": "sword_iron",
-\t\t\t"quantity": 1,
-\t\t\t"pattern": ["wood", "", "", "wood", "", "", "stick", "", ""]
-\t\t},
-\t\t{
-\t\t\t"id": "torches",
-\t\t\t"result": "torch",
-\t\t\t"quantity": 4,
-\t\t\t"pattern": ["coal", "", "", "stick", "", "", "", "", ""]
-\t\t},
-\t]
-\t
-\tfor recipe_data in recipes:
-\t\tvar recipe = CraftingRecipe.new()
-\t\trecipe.id = recipe_data.id
-\t\trecipe.result_item_id = recipe_data.result
-\t\trecipe.result_quantity = recipe_data.quantity
-\t\trecipe.shapeless = false
-\t\t
-\t\t# Convertir Array a Array[String] correctamente
-\t\tvar pattern_array: Array[String] = []
-\t\tfor item in recipe_data.pattern:
-\t\t\tpattern_array.append(item)
-\t\trecipe.pattern = pattern_array
-\t\t
-\t\tvar path = "res://recipes/%s.tres" % recipe_data.id
-\t\tResourceSaver.save(recipe, path)
-\t\tprint("✓ Creada: %s" % recipe_data.id)
-'''
+    if not file_path.exists():
+        print(f"❌ No se encontró: {file_path}")
+        return False
     
     try:
+        content = file_path.read_text(encoding='utf-8')
+        
+        # Verificar si ya tiene @tool al inicio
+        if not content.strip().startswith('@tool'):
+            content = '@tool\n' + content
+        
+        # Asegurar que class_name esté antes de extends
+        if 'class_name InventoryUI' not in content:
+            content = content.replace(
+                'extends Control',
+                'class_name InventoryUI\nextends Control'
+            )
+        
+        # Remover @tool duplicado si existe
+        lines = content.split('\n')
+        tool_count = sum(1 for line in lines if line.strip() == '@tool')
+        if tool_count > 1:
+            # Mantener solo el primero
+            new_lines = []
+            tool_found = False
+            for line in lines:
+                if line.strip() == '@tool':
+                    if not tool_found:
+                        new_lines.append(line)
+                        tool_found = True
+                else:
+                    new_lines.append(line)
+            content = '\n'.join(new_lines)
+        
         file_path.write_text(content, encoding='utf-8')
-        print("✓ Corregido create_recipes.gd (conversión de tipos)")
+        print("✓ Corregido inventory_ui_system.gd")
         return True
+        
     except Exception as e:
         print(f"❌ Error: {e}")
         return False
 
-def fix_uids():
-    """Corrige los UIDs para eliminar las advertencias"""
+def fix_hotbar_ui_system():
+    """Corrige hotbar_ui_system.gd"""
+    
+    root = Path.cwd()
+    file_path = root / "addons" / "inventory_system" / "scripts" / "hotbar_ui_system.gd"
+    
+    if not file_path.exists():
+        print(f"❌ No se encontró: {file_path}")
+        return False
+    
+    try:
+        content = file_path.read_text(encoding='utf-8')
+        
+        # Verificar si ya tiene @tool al inicio
+        if not content.strip().startswith('@tool'):
+            content = '@tool\n' + content
+        
+        # Asegurar que class_name esté antes de extends
+        if 'class_name HotbarUI' not in content:
+            content = content.replace(
+                'extends Control',
+                'class_name HotbarUI\nextends Control',
+                1  # Solo la primera ocurrencia (la clase principal)
+            )
+        
+        # Remover @tool duplicado
+        lines = content.split('\n')
+        tool_count = sum(1 for line in lines if line.strip() == '@tool')
+        if tool_count > 1:
+            new_lines = []
+            tool_found = False
+            for line in lines:
+                if line.strip() == '@tool':
+                    if not tool_found:
+                        new_lines.append(line)
+                        tool_found = True
+                else:
+                    new_lines.append(line)
+            content = '\n'.join(new_lines)
+        
+        file_path.write_text(content, encoding='utf-8')
+        print("✓ Corregido hotbar_ui_system.gd")
+        return True
+        
+    except Exception as e:
+        print(f"❌ Error: {e}")
+        return False
+
+def fix_demo_scripts():
+    """Corrige los scripts de demo que usan tipos incorrectos"""
     
     root = Path.cwd()
     addon_path = root / "addons" / "inventory_system"
-    scripts_path = addon_path / "scripts"
     
-    # Eliminar UIDs incorrectos si existen
-    uid_files = [
-        scripts_path / "inventory_ui_system.gd.uid",
-        scripts_path / "hotbar_ui_system.gd.uid"
+    demo_files = [
+        addon_path / "demo" / "demo.gd",
+        addon_path / "demo" / "demo_with_hotbar.gd"
     ]
     
-    for uid_file in uid_files:
-        if uid_file.exists():
-            try:
-                uid_file.unlink()
-                print(f"✓ Eliminado UID obsoleto: {uid_file.name}")
-            except:
-                pass
+    for demo_file in demo_files:
+        if not demo_file.exists():
+            continue
+        
+        try:
+            content = demo_file.read_text(encoding='utf-8')
+            
+            # Cambiar tipos específicos de script a nombres de clase
+            replacements = [
+                (r'@onready var inventory_ui:\s*inventory_ui_system\.gd', 
+                 '@onready var inventory_ui: InventoryUI'),
+                (r'@onready var hotbar_ui:\s*hotbar_ui_system\.gd',
+                 '@onready var hotbar_ui: HotbarUI'),
+                # Forma alternativa
+                (r'var inventory_ui:\s*inventory_ui_system\.gd',
+                 'var inventory_ui: InventoryUI'),
+                (r'var hotbar_ui:\s*hotbar_ui_system\.gd',
+                 'var hotbar_ui: HotbarUI'),
+            ]
+            
+            modified = False
+            for pattern, replacement in replacements:
+                if re.search(pattern, content):
+                    content = re.sub(pattern, replacement, content)
+                    modified = True
+            
+            if modified:
+                demo_file.write_text(content, encoding='utf-8')
+                print(f"✓ Corregido {demo_file.name}")
+        
+        except Exception as e:
+            print(f"⚠️  Error en {demo_file.name}: {e}")
     
-    print("\nℹ️  Los UIDs se regenerarán automáticamente al recargar Godot")
     return True
 
-if __name__ == "__main__":
-    print("\n🔧 CORRECCIÓN FINAL - PATTERN Y UIDS\n")
+def verify_class_names():
+    """Verifica que todos los scripts tengan class_name correcto"""
+    
+    root = Path.cwd()
+    scripts_path = root / "addons" / "inventory_system" / "scripts"
+    
+    expected_classes = {
+        "inventory_ui_system.gd": "InventoryUI",
+        "hotbar_ui_system.gd": "HotbarUI",
+        "inventory.gd": "InventoryManager",
+        "hotbar.gd": "Hotbar",
+        "item.gd": "InventoryItem",
+        "inventory_slot.gd": "InventorySlot",
+        "crafting_recipe.gd": "CraftingRecipe",
+        "crafting_manager.gd": "CraftingManager",
+        "crafting_table_ui.gd": "CraftingTableUI",
+    }
+    
+    print("\n📋 Verificando class_name en scripts...")
+    
+    all_ok = True
+    for filename, expected_class in expected_classes.items():
+        file_path = scripts_path / filename
+        
+        if not file_path.exists():
+            print(f"  ⚠️  {filename} no existe")
+            continue
+        
+        try:
+            content = file_path.read_text(encoding='utf-8')
+            
+            if f"class_name {expected_class}" in content:
+                print(f"  ✓ {filename} → {expected_class}")
+            else:
+                print(f"  ❌ {filename} → FALTA class_name {expected_class}")
+                all_ok = False
+        
+        except Exception as e:
+            print(f"  ❌ Error leyendo {filename}: {e}")
+            all_ok = False
+    
+    return all_ok
+
+def main():
+    print("\n🔧 CORRECCIÓN DE TIPOS DE CLASE\n")
     
     # Verificar proyecto
     if not Path("project.godot").exists():
         print("❌ ERROR: Ejecuta desde la raíz del proyecto")
-        exit(1)
+        return False
     
-    # Ejecutar correcciones
+    print("🔨 Corrigiendo scripts de UI...")
     success = True
-    success = fix_create_recipes() and success
-    success = fix_uids() and success
+    success = fix_inventory_ui_system() and success
+    success = fix_hotbar_ui_system() and success
+    
+    print("\n🔨 Corrigiendo scripts de demo...")
+    success = fix_demo_scripts() and success
+    
+    print()
+    success = verify_class_names() and success
     
     # Instrucciones finales
     print("\n" + "=" * 60)
     print("  PRÓXIMOS PASOS")
     print("=" * 60)
-    print("\n1. Cierra Godot completamente")
-    print("2. Elimina la carpeta .godot/ para limpiar caché:")
-    print("   • Windows: rmdir /s .godot")
-    print("   • Linux/Mac: rm -rf .godot")
-    print("3. Abre Godot nuevamente")
-    print("4. Proyecto > Recargar proyecto actual")
-    print("5. Script > Ejecutar > create_recipes.gd")
-    print("6. Prueba el demo: demo.tscn")
-    print("\n✅ ¡Sistema completamente funcional!\n")
+    print("\n1. En Godot: Proyecto > Recargar proyecto actual")
+    print("2. Verifica que no haya errores en la consola")
+    print("3. Abre: addons/inventory_system/demo/demo.tscn")
+    print("4. Ejecuta la escena (F5 o botón Play)")
+    print("5. Presiona ESC para abrir el inventario")
     
+    if success:
+        print("\n✅ ¡Todos los tipos corregidos!\n")
+    else:
+        print("\n⚠️  Algunos problemas detectados, revisa los mensajes arriba\n")
+    
+    return success
+
+if __name__ == "__main__":
+    success = main()
     exit(0 if success else 1)
