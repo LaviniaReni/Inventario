@@ -2,9 +2,13 @@
 extends EditorScript
 
 func _run():
-	print("\n" + "=" * 50)
+	var separator = ""
+	for i in range(50):
+		separator += "="
+	
+	print("\n" + separator)
 	print("Creando recetas...")
-	print("=" * 50 + "\n")
+	print(separator + "\n")
 	
 	create_recipes_folder()
 	create_example_recipes()
