@@ -50,7 +50,12 @@ func create_example_recipes():
 		recipe.result_item_id = recipe_data.result
 		recipe.result_quantity = recipe_data.quantity
 		recipe.shapeless = false
-		recipe.pattern = recipe_data.pattern
+		
+		# Convertir Array a Array[String] correctamente
+		var pattern_array: Array[String] = []
+		for item in recipe_data.pattern:
+			pattern_array.append(item)
+		recipe.pattern = pattern_array
 		
 		var path = "res://recipes/%s.tres" % recipe_data.id
 		ResourceSaver.save(recipe, path)
